@@ -1,0 +1,38 @@
+.layoutContainer {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f8fafc;
+    /* Light slate background */
+    font-family: sans-serif;
+}
+
+/* LEFT SIDE: 30% Width, Vertical Stack */
+.sidebar {
+    width: 30%;
+    min-width: 280px;
+    /* Prevents the sidebar from getting squished too small */
+    max-width: 400px;
+    /* Prevents the sidebar from getting awkwardly wide */
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #ffffff;
+}
+
+/* RIGHT SIDE: 70% Width, Vertical Stack */
+.mainContent {
+    flex: 1;
+    /* Takes up the remaining 70% dynamic space */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Scroll Containers for List and Messages */
+.scrollableArea {
+    flex: 1;
+    overflow-y: auto;
+}
