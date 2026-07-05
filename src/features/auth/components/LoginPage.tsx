@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './LoginPage.module.css';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { loginUser, signUpUser } from '../authSlice';
+import { loginUser, registerUser } from '../authSlice';
 
 const LoginPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -9,6 +9,7 @@ const LoginPage: React.FC = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [isLogin, setIsLogin] = useState(true);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -16,7 +17,7 @@ const LoginPage: React.FC = () => {
     if (isLogin) {
       dispatch(loginUser({ email, password }));
     } else {
-      dispatch(signUpUser({ email, password }));
+      dispatch(registerUser({ email, password, displayName: name }));
     }
   };
 
@@ -37,6 +38,16 @@ const LoginPage: React.FC = () => {
           </p>
 
           <form className={styles.form} onSubmit={handleSubmit}>
+            {!isLogin && (
+              <input
+                type="text"
+                placeholder="Enter your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={styles.input}
+                required
+              />
+            )}
             <input
               type="email"
               placeholder="Email"
