@@ -1,0 +1,80 @@
+.userList {
+  display: flex;
+  flex-direction: column;
+}
+
+.userListItem {
+  display: flex;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.userListItem:hover {
+  background-color: #f5f6f6;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
+  object-fit: cover;
+}
+
+.userInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.username {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #111b21;
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  color: #667781;
+}
+
+.timestampUnread {
+  font-size: 0.75rem;
+  color: #25d366;
+}
+
+.messageRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.messageText {
+  margin: 0;
+  color: #667781;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.unreadDot {
+  background-color: #25d366;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}

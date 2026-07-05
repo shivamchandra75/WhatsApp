@@ -1,5 +1,6 @@
 import React from 'react';
 import { USERS, type UserListUser } from './UserList.types';
+import styles from './UserList.module.css';
 
 export const UserList: React.FC = () => {
   const formatTime = (timestamp: number) => {
@@ -8,36 +9,30 @@ export const UserList: React.FC = () => {
   };
 
   return (
-    <div className="user-list">
+    <div className={styles.userList}>
       {USERS.map((user: UserListUser) => (
-        <div key={user.userId} className="user-list-item" style={{ display: 'flex', padding: '10px', borderBottom: '1px solid #ccc' }}>
+        <div key={user.userId} className={styles.userListItem}>
           <img
             src={user.userImage}
             alt={`${user.username}'s avatar`}
-            style={{ width: '50px', height: '50px', borderRadius: '50%', marginRight: '15px' }}
+            className={styles.avatar}
           />
-          <div className="user-info" style={{ flex: 1 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <h4 style={{ margin: 0 }}>{user.username}</h4>
+          <div className={styles.userInfo}>
+            <div className={styles.headerRow}>
+              <h4 className={styles.username}>{user.username}</h4>
               {user.lastMessage && (
-                <span style={{ fontSize: '0.8em', color: user.lastMessage.isSeen ? 'gray' : 'green' }}>
+                <span className={user.lastMessage.isSeen ? styles.timestamp : styles.timestampUnread}>
                   {formatTime(user.lastMessage.timestamp)}
                 </span>
               )}
             </div>
             {user.lastMessage && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <p style={{ margin: 0, color: 'gray', fontSize: '0.9em' }}>
+              <div className={styles.messageRow}>
+                <p className={styles.messageText}>
                   {user.lastMessage.text}
                 </p>
                 {!user.lastMessage.isSeen && (
-                  <span style={{
-                    backgroundColor: 'green',
-                    width: '10px',
-                    height: '10px',
-                    borderRadius: '50%',
-                    display: 'inline-block'
-                  }}></span>
+                  <span className={styles.unreadDot}></span>
                 )}
               </div>
             )}

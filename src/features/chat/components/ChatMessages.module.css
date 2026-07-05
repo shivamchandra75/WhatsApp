@@ -1,0 +1,22 @@
+.messagesContainer {
+  flex: 1;
+  padding: 16px;
+  background-color: #efeae2;
+  background-image: url('https://static.whatsapp.net/rsrc.php/v3/yl/r/r2-n6yU05Xw.png');
+  background-repeat: repeat;
+  background-size: 400px;
+  background-blend-mode: overlay;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+}
+
+.placeholder {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 8px 16px;
+  border-radius: 16px;
+  color: #54656f;
+  font-size: 0.875rem;
+}
