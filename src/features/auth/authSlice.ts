@@ -2,6 +2,30 @@ import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/tool
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth } from '../../confg/firebase';
 
+// Maps Firebase Auth error codes to user-friendly messages
+function getFirebaseAuthError(code: string): string {
+    switch (code) {
+        case 'auth/invalid-email':
+            return 'Please enter a valid email address.';
+        case 'auth/invalid-credential':
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+            return 'Incorrect email or password.';
+        case 'auth/user-disabled':
+            return 'This account has been disabled. Please contact support.';
+        case 'auth/email-already-in-use':
+            return 'An account with this email already exists.';
+        case 'auth/weak-password':
+            return 'Password must be at least 6 characters.';
+        case 'auth/too-many-requests':
+            return 'Too many failed attempts. Please try again later.';
+        case 'auth/network-request-failed':
+            return 'Network error. Please check your connection.';
+        default:
+            return 'Something went wrong. Please try again.';
+    }
+}
+
 export interface UserState {
     uid: string;
     email: string | null;
@@ -35,8 +59,7 @@ export const loginUser = createAsyncThunk(
                 displayName: credentials.user.displayName,
             };
         } catch (err: any) {
-            console.log('error firebase 🔴', err)
-            return rejectWithValue(err.message as string);
+            return rejectWithValue(getFirebaseAuthError(err.code));
         }
     }
 );
@@ -52,7 +75,7 @@ export const signUpUser = createAsyncThunk(
                 displayName: credentials.user.displayName,
             };
         } catch (err: any) {
-            return rejectWithValue(err.message as string);
+            return rejectWithValue(getFirebaseAuthError(err.code));
         }
     }
 );
