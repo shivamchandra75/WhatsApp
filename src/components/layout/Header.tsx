@@ -13,7 +13,7 @@ const SidebarHeader: React.FC = () => {
 
   return (
     <div className={styles.header}>
-      <h3 className={styles.title}>Chats</h3>
+      <h3 className={styles.title}>Friends</h3>
       <button
         onClick={handleLogout}
         disabled={authLoading}
