@@ -13,9 +13,9 @@ export const useUsersList = () => {
     useEffect(() => {
         if (!currentUser) return;
 
-        const usersRef = collection(db, 'users');
+        const usersCollectionRef = collection(db, 'users');
 
-        const unsubscribe = onSnapshot(usersRef, (snapshot) => {
+        const unsubscribe = onSnapshot(usersCollectionRef, (snapshot) => {
             const usersData: ContactProfile[] = [];
 
             snapshot.forEach((doc) => {

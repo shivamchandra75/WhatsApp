@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import styles from './ChatInput.module.css';
-import { useAppSelector } from '../../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { sendMessage } from '../chatSlice';
 
 const ChatInput: React.FC = () => {
   const { activeChatId } = useAppSelector(state => state.chat);
   const [message, setMessage] = useState('');
+  const dispatch = useAppDispatch();
 
   function handleSendMessage() {
     if (!activeChatId) return;
-    //dispacth action to send message
-    //clear the input after sending the message
+    dispatch(sendMessage({ chatId: activeChatId, message }));
+    setMessage('');
   }
 
   return (
