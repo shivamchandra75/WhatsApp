@@ -27,7 +27,7 @@ const ChatMessages: React.FC = () => {
             >
               <p className={styles.messageText}>{message.text}</p>
               <span className={styles.messageTimestamp}>
-                {message.timestamp?.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {message.timestamp ? new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
               </span>
             </div>
           ))}

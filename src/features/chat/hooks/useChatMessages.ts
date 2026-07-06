@@ -9,19 +9,14 @@ export const useChatMessages = (activeChatId: string | null) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // 1. Guard Clause: If the user hasn't clicked a contact yet, do nothing
         if (!activeChatId) return;
 
         console.log(`Opening live stream for chat room: ${activeChatId}`);
 
-        // 2. Point directly to the nested sub-collection path:
-        // path: chats / {activeChatId} / messages
         const messagesSubCollectionRef = collection(db, 'chats', activeChatId, 'messages');
 
-        // 3. Create a query to sort the messages chronologically by their Firestore timestamp
         const q = query(messagesSubCollectionRef, orderBy('timestamp', 'asc'));
 
-        // 4. Set up the real-time listener
         const unsubscribe = onSnapshot(
             q,
             (snapshot) => {
@@ -34,7 +29,7 @@ export const useChatMessages = (activeChatId: string | null) => {
                         id: doc.id,
                         text: data.text || '',
                         senderId: data.senderId || '',
-                        timestamp: data.timestamp, // Keeps the Firestore timestamp object
+                        timestamp: data.timestamp?.toMillis() ?? null, // ✅ plain number — Redux serializable
                     };
                 });
 
@@ -47,10 +42,6 @@ export const useChatMessages = (activeChatId: string | null) => {
             }
         );
 
-        // 6. The Cleanup Function
-        // When the user switches to a different chat, or closes the window, 
-        // React unmounts or re-runs this useEffect. Returning 'unsubscribe' 
-        // tells Firebase to instantly stop listening, preventing memory leaks and billing costs.
         return () => {
             console.log(`Closing live stream for chat room: ${activeChatId}`);
             unsubscribe();
