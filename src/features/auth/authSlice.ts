@@ -70,18 +70,13 @@ const getName = (email: string) => email.split('@')[0];
 export const registerUser = createAsyncThunk(
     'auth/signUp',
     async ({ email, password, displayName }: { email: string; password: string, displayName: string }, { rejectWithValue }) => {
-        // --- STEP 1: Create Firebase Auth user ---
         let credentials;
         try {
-            console.log('🔵 [registerUser] Step 1: Creating auth user...');
             credentials = await createUserWithEmailAndPassword(auth, email, password);
-            console.log('✅ [registerUser] Step 1 SUCCESS: Auth user created', credentials.user.uid);
         } catch (authErr: any) {
-            console.error('🔴 [registerUser] Step 1 FAILED: Auth error', { code: authErr.code, message: authErr.message });
             return rejectWithValue(getFirebaseAuthError(authErr.code));
         }
 
-        // --- STEP 2: Write user document to Firestore ---
         const user = credentials.user;
         try {
             const docData = {
@@ -91,22 +86,11 @@ export const registerUser = createAsyncThunk(
                 createdAt: new Date().toISOString(),
                 status: "Hey there! I am using WhatsApp.",
             };
-            console.log('🔵 [registerUser] Step 2: Writing Firestore doc...', { path: `users/${user.uid}`, data: docData });
             await setDoc(doc(db, 'users', user.uid), docData);
-            console.log('✅ [registerUser] Step 2 SUCCESS: Firestore doc written');
         } catch (firestoreErr: any) {
-            // NOTE: Firestore errors use different codes (e.g. 'permission-denied'),
-            // NOT the auth/xxx codes. Log the full error to diagnose.
-            console.error('🔴 [registerUser] Step 2 FAILED: Firestore error', {
-                code: firestoreErr.code,
-                message: firestoreErr.message,
-                firestoreErr
-            });
-            // Auth succeeded but Firestore failed — return a clear message
             return rejectWithValue(`Account created but profile save failed: ${firestoreErr.code}`);
         }
 
-        console.log('✅ [registerUser] All steps complete');
         return {
             uid: user.uid,
             email: user.email,
