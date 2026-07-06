@@ -1,5 +1,7 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { ChatSliceState, Message } from "./chat.types";
+import type { RootState } from "../../store/store";
+import { sendMessageToFirestore } from "./services/chatService";
 
 const initialState: ChatSliceState = {
     activeChatId: '',
@@ -7,6 +9,23 @@ const initialState: ChatSliceState = {
     activeMessages: [],
     loadingMessages: false,
 }
+
+export const sendMessage = createAsyncThunk(
+    'chat/sendMessage',
+    async ({ chatId, message }: { chatId: string; message: string }, { getState, rejectWithValue }) => {
+        const state = getState() as RootState;
+        const senderId = state.auth.user?.uid;
+
+        if (!senderId) return rejectWithValue('User not authenticated');
+
+        try {
+            await sendMessageToFirestore(chatId, message, senderId);
+        } catch (error) {
+            console.error(error);
+            return rejectWithValue('Failed to send message');
+        }
+    }
+);
 
 export const chatSlice = createSlice({
     name: 'chat',

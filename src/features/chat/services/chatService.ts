@@ -1,4 +1,4 @@
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "../../../confg/firebase";
 
 
@@ -9,12 +9,12 @@ export const generateChatId = (uid1: string, uid2: string): string => {
 export const startOrJoinChat = async (currentUserUid: string, contactUid: string) => {
     try {
         const chatId = generateChatId(currentUserUid, contactUid);
-        const chatRef = doc(db, 'chats', chatId);
+        const chatDocRef = doc(db, 'chats', chatId);
 
-        const chatSnapshot = await getDoc(chatRef);
+        const chatSnapshot = await getDoc(chatDocRef);
 
         if (!chatSnapshot.exists()) {
-            await setDoc(chatRef, {
+            await setDoc(chatDocRef, {
                 participants: [currentUserUid, contactUid],
                 createdAt: serverTimestamp(),
                 lastMessage: '',
@@ -33,3 +33,12 @@ export const startOrJoinChat = async (currentUserUid: string, contactUid: string
     }
 
 }
+
+export const sendMessageToFirestore = async (chatId: string, text: string, senderId: string) => {
+    const messagesSubCollectionRef = collection(db, 'chats', chatId, 'messages');
+    await addDoc(messagesSubCollectionRef, {
+        text,
+        senderId,
+        timestamp: serverTimestamp(),
+    });
+};
