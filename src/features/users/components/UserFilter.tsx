@@ -6,7 +6,6 @@ const UserFilter: React.FC = () => {
     <div className={styles.filterContainer}>
       <button className={`${styles.filterBtn} ${styles.active}`}>All</button>
       <button className={styles.filterBtn}>Unread</button>
-      <button className={styles.filterBtn}>Groups</button>
     </div>
   );
 };

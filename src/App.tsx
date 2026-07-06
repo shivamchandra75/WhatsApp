@@ -38,7 +38,6 @@ export default function App() {
           <SidebarHeader />
           <SearchBar />
           <UserFilter />
-          {/* This wrapper ensures only the user list scrolls */}
           <div className={styles.scrollableArea}>
             <UserList />
           </div>
@@ -47,7 +46,6 @@ export default function App() {
       content={
         <>
           <ChatHeader />
-          {/* This wrapper ensures only the chat bubbles scroll */}
           <div className={styles.scrollableArea}>
             <ChatMessages />
           </div>

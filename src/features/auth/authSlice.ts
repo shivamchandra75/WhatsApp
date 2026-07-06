@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-import { auth } from '../../confg/firebase';
+import { auth, db } from '../../confg/firebase';
+import { doc, setDoc } from 'firebase/firestore';
 
 // Maps Firebase Auth error codes to user-friendly messages
 function getFirebaseAuthError(code: string): string {
@@ -64,19 +65,37 @@ export const loginUser = createAsyncThunk(
     }
 );
 
-export const signUpUser = createAsyncThunk(
+const getName = (email: string) => email.split('@')[0];
+
+export const registerUser = createAsyncThunk(
     'auth/signUp',
-    async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
+    async ({ email, password, displayName }: { email: string; password: string, displayName: string }, { rejectWithValue }) => {
+        let credentials;
         try {
-            const credentials = await createUserWithEmailAndPassword(auth, email, password);
-            return {
-                uid: credentials.user.uid,
-                email: credentials.user.email,
-                displayName: credentials.user.displayName,
-            };
-        } catch (err: any) {
-            return rejectWithValue(getFirebaseAuthError(err.code));
+            credentials = await createUserWithEmailAndPassword(auth, email, password);
+        } catch (authErr: any) {
+            return rejectWithValue(getFirebaseAuthError(authErr.code));
         }
+
+        const user = credentials.user;
+        try {
+            const docData = {
+                uid: user.uid,
+                email: user.email,
+                displayName: displayName || getName(user.email),
+                createdAt: new Date().toISOString(),
+                status: "Hey there! I am using WhatsApp.",
+            };
+            await setDoc(doc(db, 'users', user.uid), docData);
+        } catch (firestoreErr: any) {
+            return rejectWithValue(`Account created but profile save failed: ${firestoreErr.code}`);
+        }
+
+        return {
+            uid: user.uid,
+            email: user.email,
+            displayName: displayName || getName(user.email),
+        };
     }
 );
 
@@ -121,16 +140,16 @@ export const authSlice = createSlice({
                 state.error = action.payload as string;
                 state.authLoading = false;
             })
-            // --- signUpUser ---
-            .addCase(signUpUser.pending, (state) => {
+            // --- registerUser ---
+            .addCase(registerUser.pending, (state) => {
                 state.authLoading = true;
                 state.error = null;
             })
-            .addCase(signUpUser.fulfilled, (state, action) => {
+            .addCase(registerUser.fulfilled, (state, action) => {
                 state.user = action.payload;
                 state.authLoading = false;
             })
-            .addCase(signUpUser.rejected, (state, action) => {
+            .addCase(registerUser.rejected, (state, action) => {
                 state.error = action.payload as string;
                 state.authLoading = false;
             })
