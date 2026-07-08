@@ -2,10 +2,11 @@ import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/tool
 import type { ChatSliceState, Message } from "./chat.types";
 import type { RootState } from "../../store/store";
 import { sendMessageToFirestore } from "./services/chatService";
+import type { ContactProfile } from "../users/UserList.types";
 
 const initialState: ChatSliceState = {
     activeChatId: '',
-    activeContactName: '',
+    activeContact: null,
     activeMessages: [],
     loadingMessages: false,
 }
@@ -34,8 +35,8 @@ export const chatSlice = createSlice({
         setActiveChatId(state, action: PayloadAction<string>) {
             state.activeChatId = action.payload;
         },
-        setActiveContact(state, action: PayloadAction<string>) {
-            state.activeContactName = action.payload;
+        setActiveContact(state, action: PayloadAction<ContactProfile | null>) {
+            state.activeContact = action.payload;
         },
         setMessages(state, action: PayloadAction<Message[]>) {
             state.activeMessages = action.payload;

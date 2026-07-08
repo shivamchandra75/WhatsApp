@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/tool
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth, db } from '../../confg/firebase';
 import { doc, setDoc } from 'firebase/firestore';
+import { updateUserOnlineStatusInFirestore } from './Services/authService';
+import type { RootState } from "../../store/store";
 
 // Maps Firebase Auth error codes to user-friendly messages
 function getFirebaseAuthError(code: string): string {
@@ -54,6 +56,12 @@ export const loginUser = createAsyncThunk(
     async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
         try {
             const credentials = await signInWithEmailAndPassword(auth, email, password);
+            console.log('🙍‍♂️ user credentials', credentials)
+            try {
+                await updateUserOnlineStatusInFirestore(credentials.user.uid, true);
+            } catch (error) {
+                console.error('failed to update online status', error);
+            }
             return {
                 uid: credentials.user.uid,
                 email: credentials.user.email,
@@ -85,6 +93,7 @@ export const registerUser = createAsyncThunk(
                 displayName: displayName || getName(user.email),
                 createdAt: new Date().toISOString(),
                 status: "Hey there! I am using WhatsApp.",
+                isOnline: true,
             };
             await setDoc(doc(db, 'users', user.uid), docData);
         } catch (firestoreErr: any) {
@@ -101,8 +110,18 @@ export const registerUser = createAsyncThunk(
 
 export const signOutUser = createAsyncThunk(
     'auth/signOut',
-    async (_, { rejectWithValue }) => {
+    async (_, { getState, rejectWithValue }) => {
+
+        const state = getState() as RootState;
+        const currentUserId = state.auth.user?.uid;
         try {
+            if (!currentUserId) return rejectWithValue('No user is currently logged in');
+
+            try {
+                await updateUserOnlineStatusInFirestore(currentUserId, false);
+            } catch (error) {
+                console.error('failed to update online status', error);
+            }
             await signOut(auth);
         } catch (error: any) {
             return rejectWithValue(error.message as string);
