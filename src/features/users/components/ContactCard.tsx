@@ -21,7 +21,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({ user, formatTime }) =>
     const chatId = await startOrJoinChat(currentUserUid, user.uid);
 
     dispatch(setActiveChatId(chatId));          // triggers useChatMessages to subscribe
-    dispatch(setActiveContact(user.displayName)); // updates the chat header
+    dispatch(setActiveContact(user)); // updates the chat header
   };
 
   return (

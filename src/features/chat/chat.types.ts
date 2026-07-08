@@ -1,8 +1,8 @@
-import type { LastMessage } from "../users/UserList.types";
+import type { ContactProfile, LastMessage } from "../users/UserList.types";
 
 export interface ChatSliceState {
     activeChatId: string | null;
-    activeContactName: string | null;
+    activeContact: ContactProfile | null;
     activeMessages: Message[];
     loadingMessages: boolean;
 }
