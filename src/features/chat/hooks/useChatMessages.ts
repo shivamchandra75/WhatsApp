@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
-import { db } from '../../../confg/firebase';
+import { collection, query, orderBy, onSnapshot, doc, updateDoc } from 'firebase/firestore';
+import { auth, db } from '../../../confg/firebase';
 import { setMessages } from '../chatSlice';
 import { type Message } from '../chat.types';
 
@@ -11,31 +11,49 @@ export const useChatMessages = (activeChatId: string | null) => {
     useEffect(() => {
         if (!activeChatId) return;
 
+        const currentUserId = auth.currentUser?.uid;
+        if (!currentUserId) return;
+
         console.log(`Opening live stream for chat room: ${activeChatId}`);
 
         const messagesSubCollectionRef = collection(db, 'chats', activeChatId, 'messages');
-
         const q = query(messagesSubCollectionRef, orderBy('timestamp', 'asc'));
 
         const unsubscribe = onSnapshot(
             q,
             (snapshot) => {
-                console.log('Live Chat Messges: ', snapshot)
+                let hasNewMessagesFromOtherUser = false;
+
                 const messagesData: Message[] = snapshot.docs.map((doc) => {
                     const data = doc.data();
 
-                    // Map Firestore document data cleanly to our TypeScript Message interface
+                    // Check if there are new unread messages from the other user
+                    if (snapshot.docChanges().some(change => 
+                        change.type === 'added' && 
+                        change.doc.data().senderId !== currentUserId
+                    )) {
+                        hasNewMessagesFromOtherUser = true;
+                    }
+
                     return {
                         id: doc.id,
                         text: data.text || '',
+                        isSeen: data.isSeen,
                         senderId: data.senderId || '',
-                        timestamp: data.timestamp?.toMillis() ?? null, // ✅ plain number — Redux serializable
+                        timestamp: data.timestamp?.toMillis() ?? null,
                     };
                 });
 
-                console.log(`messagesData: `, messagesData)
-                // 5. Dispatch the strongly-typed array to your Redux slice
                 dispatch(setMessages(messagesData));
+
+                // If a new message arrived while the user is actively viewing the chat,
+                // instantly clear their unread count.
+                if (hasNewMessagesFromOtherUser) {
+                    const chatDocRef = doc(db, 'chats', activeChatId);
+                    updateDoc(chatDocRef, {
+                        [`unreadCount.${currentUserId}`]: 0
+                    }).catch(err => console.error("Failed to clear unread count:", err));
+                }
             },
             (error) => {
                 console.error("Firestore real-time stream error:", error);

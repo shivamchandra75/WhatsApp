@@ -12,6 +12,7 @@ export interface ContactProfile {
   lastMessage?: LastMessage;
   status: string;
   isOnline: boolean;
+  unreadCount: number;
 }
 
 export interface UsersState {

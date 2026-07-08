@@ -3,7 +3,7 @@ import type { ContactProfile } from '../UserList.types';
 import styles from '../userList.module.css';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setActiveChatId, setActiveContact } from '../../chat/chatSlice';
-import { startOrJoinChat } from '../../chat/services/chatService';
+import { startOrJoinChat, updateUnreadCountInFirestore } from '../../chat/services/chatService';
 
 interface ContactCardProps {
   user: ContactProfile;
@@ -20,8 +20,10 @@ export const ContactCard: React.FC<ContactCardProps> = ({ user, formatTime }) =>
     // Creates the chat room in Firestore if it doesn't exist, then returns its ID
     const chatId = await startOrJoinChat(currentUserUid, user.uid);
 
+
     dispatch(setActiveChatId(chatId));          // triggers useChatMessages to subscribe
     dispatch(setActiveContact(user)); // updates the chat header
+    await updateUnreadCountInFirestore(chatId, currentUserUid);
   };
 
   return (
@@ -45,8 +47,8 @@ export const ContactCard: React.FC<ContactCardProps> = ({ user, formatTime }) =>
             <p className={styles.messageText}>
               {user.lastMessage?.text}
             </p>
-            {!user.lastMessage.isSeen && (
-              <span className={styles.unreadDot}></span>
+            {user.unreadCount > 0 && (
+              <span className={styles.unreadDot}>{user.unreadCount}</span>
             )}
           </div>
         )}

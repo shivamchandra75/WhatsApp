@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, increment, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../confg/firebase";
 
 
@@ -23,6 +23,10 @@ export const startOrJoinChat = async (currentUserUid: string, contactUid: string
                     isSeen: false,
                     senderId: '',
                 },
+                unreadCount: {
+                    [currentUserUid]: 0,
+                    [contactUid]: 0,
+                },
                 updatedAt: serverTimestamp(),
             });
             console.log('New Chat room created');
@@ -42,6 +46,7 @@ export const startOrJoinChat = async (currentUserUid: string, contactUid: string
 export const sendMessageToFirestore = async (chatId: string, text: string, senderId: string) => {
     const messagesSubCollectionRef = collection(db, 'chats', chatId, 'messages');
     const chatDocRef = doc(db, 'chats', chatId);
+    const contactId = chatId.split('_').find(id => id !== senderId);
     const messageData = {
         text,
         senderId,
@@ -49,6 +54,24 @@ export const sendMessageToFirestore = async (chatId: string, text: string, sende
         isSeen: false
     }
 
-    await addDoc(messagesSubCollectionRef, messageData);
-    await updateDoc(chatDocRef, { lastMessage: messageData })
+    try {
+        await addDoc(messagesSubCollectionRef, messageData);
+    } catch (error) {
+        console.error('Failed to add message :', error);
+    }
+
+    try {
+        await updateDoc(chatDocRef, { lastMessage: messageData, [`unreadCount.${contactId}`]: increment(1) })
+    } catch (error) {
+        console.error('Failed to update last message & unread count:', error);
+    }
+};
+
+export const updateUnreadCountInFirestore = async (chatId: string, currentUserId: string) => {
+    try {
+        const chatDocRef = doc(db, 'chats', chatId);
+        await updateDoc(chatDocRef, { [`unreadCount.${currentUserId}`]: 0 })
+    } catch (error) {
+        console.error('Failed to update unread count:', error);
+    }
 };

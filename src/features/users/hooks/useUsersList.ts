@@ -17,12 +17,14 @@ export const useUsersList = () => {
         const usersCollectionRef = collection(db, 'users');
         let contacts: ContactProfile[] = [];
         const lastMessageMap = new Map<string, LastMessage>();
+        const unreadCountMap = new Map<string, number>();
         const chatUnsubscribes: (() => void)[] = [];
 
         const rebuildAndDispatch = () => {
             const enrichedContacts = contacts.map(contact => ({
                 ...contact,
                 lastMessage: lastMessageMap.get(contact.uid),
+                unreadCount: unreadCountMap.get(contact.uid),
             }));
             dispatch(setContacts(enrichedContacts));
         };
@@ -32,6 +34,7 @@ export const useUsersList = () => {
             chatUnsubscribes.forEach(unsub => unsub());
             chatUnsubscribes.length = 0;
             lastMessageMap.clear();
+            unreadCountMap.clear();
 
             contacts = [];
             snapshot.forEach((userDoc) => {
@@ -55,6 +58,9 @@ export const useUsersList = () => {
                                 isSeen: chatData.lastMessage.isSeen,
                                 senderId: chatData.lastMessage.senderId,
                             });
+                        }
+                        if (chatData.unreadCount) {
+                            unreadCountMap.set(contact.uid, chatData.unreadCount[currentUser.uid]);
                         }
                     }
                     rebuildAndDispatch();
