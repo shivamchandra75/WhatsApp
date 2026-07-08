@@ -1,3 +1,5 @@
+import type { LastMessage } from "../users/UserList.types";
+
 export interface ChatSliceState {
     activeChatId: string | null;
     activeContactName: string | null;
@@ -11,7 +13,7 @@ export interface ChatRoom {
     participants: string[];
     createdAt: any;
     updatedAt: any;
-    lastMessage: string;
+    lastMessage: LastMessage;
 }
 
 // 2. The Sub-collection Message Document Type
