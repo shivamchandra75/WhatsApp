@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../confg/firebase";
 
 
@@ -17,7 +17,12 @@ export const startOrJoinChat = async (currentUserUid: string, contactUid: string
             await setDoc(chatDocRef, {
                 participants: [currentUserUid, contactUid],
                 createdAt: serverTimestamp(),
-                lastMessage: '',
+                lastMessage: {
+                    text: '',
+                    timestamp: serverTimestamp(),
+                    isSeen: false,
+                    senderId: '',
+                },
                 updatedAt: serverTimestamp(),
             });
             console.log('New Chat room created');
@@ -36,9 +41,14 @@ export const startOrJoinChat = async (currentUserUid: string, contactUid: string
 
 export const sendMessageToFirestore = async (chatId: string, text: string, senderId: string) => {
     const messagesSubCollectionRef = collection(db, 'chats', chatId, 'messages');
-    await addDoc(messagesSubCollectionRef, {
+    const chatDocRef = doc(db, 'chats', chatId);
+    const messageData = {
         text,
         senderId,
         timestamp: serverTimestamp(),
-    });
+        isSeen: false
+    }
+
+    await addDoc(messagesSubCollectionRef, messageData);
+    await updateDoc(chatDocRef, { lastMessage: messageData })
 };

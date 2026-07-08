@@ -1,7 +1,8 @@
 export interface LastMessage {
   text: string;
-  timestamp: number; // Storing as unix timestamp in milliseconds. Firebase can also use its own Timestamp type.
+  timestamp: number;
   isSeen: boolean;
+  senderId: string;
 }
 
 export interface ContactProfile {

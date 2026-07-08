@@ -43,7 +43,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({ user, formatTime }) =>
         {user.lastMessage && (
           <div className={styles.messageRow}>
             <p className={styles.messageText}>
-              {user.lastMessage.text || 'how are you'}
+              {user.lastMessage?.text}
             </p>
             {!user.lastMessage.isSeen && (
               <span className={styles.unreadDot}></span>

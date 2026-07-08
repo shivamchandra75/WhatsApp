@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../confg/firebase';
 import { setContacts } from '../usersSlice';
 import { useAppSelector } from '../../../store/hooks';
-import type { ContactProfile } from '../UserList.types';
+import type { ContactProfile, LastMessage } from '../UserList.types';
+import { generateChatId } from '../../chat/services/chatService';
 
 export const useUsersList = () => {
     const dispatch = useDispatch();
@@ -14,19 +15,61 @@ export const useUsersList = () => {
         if (!currentUser) return;
 
         const usersCollectionRef = collection(db, 'users');
+        let contacts: ContactProfile[] = [];
+        const lastMessageMap = new Map<string, LastMessage>();
+        const chatUnsubscribes: (() => void)[] = [];
 
-        const unsubscribe = onSnapshot(usersCollectionRef, (snapshot) => {
-            const usersData: ContactProfile[] = [];
+        const rebuildAndDispatch = () => {
+            const enrichedContacts = contacts.map(contact => ({
+                ...contact,
+                lastMessage: lastMessageMap.get(contact.uid),
+            }));
+            dispatch(setContacts(enrichedContacts));
+        };
 
-            snapshot.forEach((doc) => {
-                if (doc.id !== currentUser.uid) {
-                    usersData.push(doc.data() as ContactProfile);
+        const unsubscribeUsers = onSnapshot(usersCollectionRef, (snapshot) => {
+            // Clean up previous chat doc listeners before setting up new ones
+            chatUnsubscribes.forEach(unsub => unsub());
+            chatUnsubscribes.length = 0;
+            lastMessageMap.clear();
+
+            contacts = [];
+            snapshot.forEach((userDoc) => {
+                if (userDoc.id !== currentUser.uid) {
+                    contacts.push(userDoc.data() as ContactProfile);
                 }
             });
 
-            dispatch(setContacts(usersData));
+            // For each contact, listen to their chat doc for real-time lastMessage updates
+            contacts.forEach(contact => {
+                const chatId = generateChatId(currentUser.uid, contact.uid);
+                const chatDocRef = doc(db, 'chats', chatId);
+
+                const unsubChat = onSnapshot(chatDocRef, (chatSnapshot) => {
+                    if (chatSnapshot.exists()) {
+                        const chatData = chatSnapshot.data();
+                        if (chatData.lastMessage) {
+                            lastMessageMap.set(contact.uid, {
+                                text: chatData.lastMessage.text,
+                                timestamp: chatData.lastMessage.timestamp?.toMillis?.() ?? Date.now(),
+                                isSeen: chatData.lastMessage.isSeen,
+                                senderId: chatData.lastMessage.senderId,
+                            });
+                        }
+                    }
+                    rebuildAndDispatch();
+                });
+
+                chatUnsubscribes.push(unsubChat);
+            });
+
+            // Dispatch immediately with whatever we have (chat listeners will update as they fire)
+            rebuildAndDispatch();
         });
 
-        return () => unsubscribe();
+        return () => {
+            unsubscribeUsers();
+            chatUnsubscribes.forEach(unsub => unsub());
+        };
     }, [dispatch, currentUser]);
 };
