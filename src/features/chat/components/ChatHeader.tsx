@@ -3,7 +3,6 @@ import styles from './ChatHeader.module.css';
 import { useAppSelector } from '../../../store/hooks';
 
 const ChatHeader: React.FC = () => {
-  const { activeContact } = useAppSelector(state => state.chat)
   const activeContactData = useAppSelector(state =>
     state.users.contacts.find(c => c.uid === state.chat.activeContact?.uid)
   );

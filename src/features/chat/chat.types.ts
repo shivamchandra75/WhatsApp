@@ -6,6 +6,9 @@ export interface ChatSliceState {
     activeMessages: Message[];
     loadingMessages: boolean;
 }
+export interface UnreadCount {
+    [key: string]: number;
+}
 
 // 1. The Top-Level Chat Document Type
 export interface ChatRoom {
@@ -14,6 +17,7 @@ export interface ChatRoom {
     createdAt: any;
     updatedAt: any;
     lastMessage: LastMessage;
+    unreadCount: UnreadCount;
 }
 
 // 2. The Sub-collection Message Document Type
