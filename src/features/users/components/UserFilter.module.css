@@ -1,26 +1,25 @@
 .filterContainer {
   display: flex;
   gap: 8px;
-  padding: 8px 16px;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 0.5rem 1rem;
 }
 
 .filterBtn {
   padding: 6px 12px;
   border-radius: 16px;
   border: none;
-  background-color: #f1f5f9;
-  color: #475569;
+  background-color: var(--bg-surface-component);
+  color: var(--text-secondary);
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .filterBtn.active {
-  background-color: #e0f2fe;
-  color: #0284c7;
+  background-color: var(--bg-surface-active-green);
+  color: var(--text-active-dark);
 }
 
 .filterBtn:hover {
-  background-color: #e2e8f0;
+  background-color: var(--bg-surface-hover);
 }

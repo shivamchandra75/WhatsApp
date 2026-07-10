@@ -1,22 +1,23 @@
 .inputContainer {
   padding: 0rem 0.8rem 0.8rem 0.8rem;
-  background-color: #efeae2;
+  background-color: var(--bg-main);
 }
 
 .inputWrapper {
   display: flex;
   gap: .8rem;
+  align-items: center;
+  padding-left: 1.2rem;
   border-radius: 8rem;
   border: none;
-  background-color: #fff;
+  background-color: var(--bg-surface);
 }
 
 .inputField {
   flex: 1;
-  padding: 1rem 1.5rem;
-  border-radius: 8rem;
+  padding: 1rem 1.5rem 1rem 0;
   border: none;
-  background-color: #ffffff;
+  background-color: var(--color-white);
   font-size: 0.9375rem;
 }
 
@@ -24,24 +25,22 @@
   outline: none;
 }
 
-.sendIcon {
-  width: 0;
-  height: 0;
-  border-top: 0.45rem solid transparent;
-  border-bottom: 0.45rem solid transparent;
-  border-left: 0.75rem solid #fff;
-  margin-left: 0.2rem;
+.sendIconWrapper {
+  margin-top: 2px;
+  margin-left: 2px;
 }
 
 .sendBtn {
-  background-color: var(--accent);
+  background-color: var(--brand-primary);
   border: none;
   margin: 0.5rem;
   border-radius: 100%;
-  color: #fff;
+  color: var(--color-white);
   font-weight: bold;
-  padding: 0.25rem 1rem;
-  aspect-ratio: 1;
+  /* padding: 0.25rem .8rem; */
+  width: 2.5rem;
+  height: 2.5rem;
+  /* aspect-ratio: 1; */
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
