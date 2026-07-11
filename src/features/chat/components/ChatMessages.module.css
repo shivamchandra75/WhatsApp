@@ -16,7 +16,7 @@
   padding: 8px 16px;
   border-radius: 16px;
   color: var(--text-muted);
-  font-size: 0.875rem;
+  font: var(--font-sm-regular);
 }
 
 /* Wrapper that stacks all bubbles top-to-bottom */
@@ -56,13 +56,12 @@
 
 .messageText {
   margin: 0;
-  font-size: 0.9375rem;
+  font: var(--font-base-regular);
   color: var(--text-primary);
-  line-height: 1.4;
 }
 
 .messageTimestamp {
-  font-size: 0.6875rem;
+  font: var(--font-xs-regular);
   color: var(--text-secondary);
   align-self: flex-end;
   display: flex;

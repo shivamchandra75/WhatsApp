@@ -72,7 +72,22 @@
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
-  font: 18px/145% var(--sans);
+  /* 12px 400 16px */
+  --font-xs-regular: 400 0.75rem/1rem var(--sans);
+  /* 12px 550 16px */
+  --font-xs-medium: 550 0.75rem/1rem var(--sans);
+  /* 14px 400 19px */
+  --font-sm-regular: 400 0.875rem/1.1875rem var(--sans);
+  /* 14px 550 20px */
+  --font-sm-medium: 550 0.875rem/1.25rem var(--sans);
+  /* 16px 400 22px */
+  --font-base-regular: 400 1rem/1.375rem var(--sans);
+  /* 22px 450 28px */
+  --font-xl-medium: 450 1.375rem/1.75rem var(--sans);
+  /* 24px 600 24px */
+  --font-logo-bold: 600 1.5rem/1.5rem var(--sans);
+
+  font: 16px/145% var(--sans);
   letter-spacing: 0.18px;
   color-scheme: light;
   color: var(--text-primary);

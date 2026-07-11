@@ -7,10 +7,9 @@
 }
 
 .title {
-  color: var(--brand-primary);
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
+  font: var(--font-logo-bold);
+  color: var(--brand-primary);
 }
 
 .button {

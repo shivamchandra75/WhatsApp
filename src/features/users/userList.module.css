@@ -43,18 +43,18 @@
 
 .username {
   margin: 0;
-  font-size: 1rem;
+  font: var(--font-base-regular);
   font-weight: 500;
   color: var(--text-primary);
 }
 
 .timestamp {
-  font-size: 0.75rem;
+  font: var(--font-xs-regular);
   color: var(--text-secondary);
 }
 
 .timestampUnread {
-  font-size: 0.75rem;
+  font: var(--font-xs-regular);
   color: var(--brand-primary);
 }
 
@@ -67,7 +67,7 @@
 .messageText {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font: var(--font-sm-regular);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -84,7 +84,6 @@
   justify-content: center;
   background-color: var(--brand-primary);
   color: var(--text-inverse);
-  font-size: 0.75rem;
-  font-weight: 600;
+  font: var(--font-xs-medium);
   box-sizing: border-box;
 }
