@@ -1,12 +1,8 @@
 .messagesContainer {
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
-  background-color: #efeae2;
-  background-image: url('https://static.whatsapp.net/rsrc.php/v3/yl/r/r2-n6yU05Xw.png');
-  background-repeat: repeat;
-  background-size: 400px;
-  background-blend-mode: overlay;
+  padding: 1rem 3.5rem;
+  background-color: var(--bg-main);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -19,8 +15,8 @@
   background-color: rgba(255, 255, 255, 0.8);
   padding: 8px 16px;
   border-radius: 16px;
-  color: #54656f;
-  font-size: 0.875rem;
+  color: var(--text-muted);
+  font: var(--font-sm-regular);
 }
 
 /* Wrapper that stacks all bubbles top-to-bottom */
@@ -34,37 +30,41 @@
 .messageLeft,
 .messageRight {
   max-width: 65%;
+  min-height: 30px;
   padding: 6px 12px 4px 12px;
   border-radius: 8px;
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  flex-direction: row;
+  gap: .4rem;
   word-break: break-word;
+  box-shadow: var(--msg-shadow);
 }
 
 /* Contact's message — left side */
 .messageLeft {
   align-self: flex-start;
-  background-color: #ffffff;
+  background-color: var(--msg-incoming-bg);
   border-top-left-radius: 0;
 }
 
 /* Your message — right side */
 .messageRight {
   align-self: flex-end;
-  background-color: #d9fdd3;
+  background-color: var(--msg-outgoing-bg);
   border-top-right-radius: 0;
 }
 
 .messageText {
   margin: 0;
-  font-size: 0.9375rem;
-  color: #111b21;
-  line-height: 1.4;
+  font: var(--font-base-regular);
+  color: var(--text-primary);
 }
 
 .messageTimestamp {
-  font-size: 0.6875rem;
-  color: #667781;
+  font: var(--font-xs-regular);
+  color: var(--text-secondary);
   align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }

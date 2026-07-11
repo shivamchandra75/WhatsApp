@@ -4,8 +4,8 @@
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background-color: #f0f2f5;
-  background-image: linear-gradient(180deg, #00a884 0%, #00a884 130px, #f0f2f5 130px, #f0f2f5 100%);
+  background-color: var(--bg-main);
+  background-image: linear-gradient(180deg, var(--brand-primary) 0%, var(--brand-primary) 130px, var(--bg-main) 130px, var(--bg-main) 100%);
 }
 
 .card {
@@ -37,7 +37,7 @@
 .title {
   font-size: 28px;
   font-weight: 300;
-  color: #41525d;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -52,7 +52,7 @@
 
 .instructions {
   font-size: 18px;
-  color: #3b4a54;
+  color: var(--text-primary);
   text-align: center;
   margin: 0 0 20px 0;
   font-weight: 300;
@@ -69,25 +69,25 @@
 .input {
   padding: 12px;
   border-radius: 4px;
-  border: 1px solid #d1d7db;
+  border: 1px solid var(--border-dark);
   font-size: 16px;
-  background-color: #f0f2f5;
+  background-color: var(--bg-main);
 }
 
 .input:focus {
   outline: none;
-  border-color: #00a884;
+  border-color: var(--brand-primary);
 }
 
 .error {
-  color: #f15c6d;
+  color: var(--error);
   font-size: 14px;
   margin: 0;
   text-align: center;
 }
 
 .submitButton {
-  background-color: #00a884;
+  background-color: var(--brand-primary);
   color: white;
   border: none;
   border-radius: 24px;
@@ -100,13 +100,13 @@
 }
 
 .submitButton:hover {
-  background-color: #008f6f;
+  background-color: var(--brand-primary-hover);
 }
 
 .toggleButton {
   background: none;
   border: none;
-  color: #027eb5;
+  color: var(--info);
   font-size: 14px;
   cursor: pointer;
   margin-top: 20px;
@@ -114,5 +114,5 @@
 }
 
 .toggleButton:hover {
-  color: #015c85;
+  color: var(--info);
 }

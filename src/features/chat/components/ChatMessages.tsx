@@ -2,6 +2,8 @@ import React from 'react';
 import styles from './ChatMessages.module.css';
 import { useAppSelector } from '../../../store/hooks';
 import { useChatMessages } from '../hooks/useChatMessages';
+import { formatTimeTo12Hours } from '../../../utils/utils';
+import { CheckCheck } from 'lucide-react';
 
 const ChatMessages: React.FC = () => {
   const { activeChatId, activeMessages } = useAppSelector(state => state.chat);
@@ -27,7 +29,10 @@ const ChatMessages: React.FC = () => {
             >
               <p className={styles.messageText}>{message.text}</p>
               <span className={styles.messageTimestamp}>
-                {message.timestamp ? new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                {message.timestamp ? formatTimeTo12Hours(message.timestamp) : ''}
+                {message.senderId === currentUser?.uid && (
+                  <CheckCheck size={14} color="var(--brand-primary)" />
+                )}
               </span>
             </div>
           ))}

@@ -1,16 +1,15 @@
 .header {
   display: flex;
-  height: 10vh;
+  height: 3.5rem;
   padding: 0 1rem;
   align-items: center;
   justify-content: space-between;
 }
 
 .title {
-  color: var(--accent);
   margin: 0;
-  font-size: 1.5rem;
-  font-weight: 600;
+  font: var(--font-logo-bold);
+  color: var(--brand-primary);
 }
 
 .button {
@@ -20,9 +19,9 @@
   border-style: solid;
   border-width: 1px;
   cursor: pointer;
-  background-color: #f1f5f9;
+  background-color: var(--bg-surface-hover);
 }
 
 .button:hover {
-  background-color: #e2e8f0;
+  background-color: var(--color-gray-200);
 }

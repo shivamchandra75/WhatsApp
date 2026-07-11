@@ -28,8 +28,8 @@ export const useChatMessages = (activeChatId: string | null) => {
                     const data = doc.data();
 
                     // Check if there are new unread messages from the other user
-                    if (snapshot.docChanges().some(change => 
-                        change.type === 'added' && 
+                    if (snapshot.docChanges().some(change =>
+                        change.type === 'added' &&
                         change.doc.data().senderId !== currentUserId
                     )) {
                         hasNewMessagesFromOtherUser = true;
@@ -51,7 +51,8 @@ export const useChatMessages = (activeChatId: string | null) => {
                 if (hasNewMessagesFromOtherUser) {
                     const chatDocRef = doc(db, 'chats', activeChatId);
                     updateDoc(chatDocRef, {
-                        [`unreadCount.${currentUserId}`]: 0
+                        [`unreadCount.${currentUserId}`]: 0,
+                        'lastMessage.isSeen': true
                     }).catch(err => console.error("Failed to clear unread count:", err));
                 }
             },

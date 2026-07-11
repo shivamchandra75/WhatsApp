@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './Header.module.css';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { signOutUser } from '../../features/auth/authSlice';
+import { LogOut } from 'lucide-react';
 
 const SidebarHeader: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -18,7 +19,9 @@ const SidebarHeader: React.FC = () => {
         onClick={handleLogout}
         disabled={authLoading}
         className={styles.button}
+        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
       >
+        <LogOut size={16} />
         {
           authLoading
             ? "Logging Out..." : "Logout"
