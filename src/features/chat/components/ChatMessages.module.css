@@ -3,10 +3,6 @@
   overflow-y: auto;
   padding: 1rem 3.5rem;
   background-color: var(--bg-main);
-  background-image: url('https://static.whatsapp.net/rsrc.php/v3/yl/r/r2-n6yU05Xw.png');
-  background-repeat: repeat;
-  background-size: 400px;
-  background-blend-mode: overlay;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
