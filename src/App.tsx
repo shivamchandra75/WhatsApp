@@ -6,9 +6,7 @@ import { useAuthListener } from './features/auth/hooks/useAuthListener';
 import LoginPage from './features/auth/components/LoginPage';
 
 // Left Side Components
-import SidebarHeader from './components/layout/Header';
-import SearchBar from './features/users/components/SearchBar';
-import UserFilter from './features/users/components/UserFilter';
+import Sidebar from './components/layout/Sidebar';
 
 // Right Side Components
 import ChatHeader from './features/chat/components/ChatHeader';
@@ -33,16 +31,7 @@ export default function App() {
 
   return (
     <MainLayout
-      sidebar={
-        <>
-          <SidebarHeader />
-          <SearchBar />
-          <UserFilter />
-          <div className={styles.scrollableArea}>
-            <UserList />
-          </div>
-        </>
-      }
+      sidebar={<Sidebar />}
       content={
         <>
           <ChatHeader />

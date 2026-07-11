@@ -10,7 +10,7 @@
   align-items: center;
   gap: 1rem;
   padding: .2rem .8rem;
-  height: 4rem;
+  min-height: 4rem;
   border-radius: .5rem;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -25,7 +25,11 @@
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  background-color: var(--text-primary);
+  background-color: var(--bg-surface-active-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: .2px solid;
 }
 
 .userInfo {
@@ -86,4 +90,19 @@
   color: var(--text-inverse);
   font: var(--font-xs-medium);
   box-sizing: border-box;
+}
+
+.noContacts {
+  font: var(--font-sm-medium);
+  color: var(--text-secondary);
+}
+
+.filterBtn {
+  color: var(--brand-primary);
+  font: var(--font-xs-medium);
+  padding: .4rem;
+  text-align: center;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 }

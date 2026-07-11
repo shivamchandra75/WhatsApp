@@ -30,12 +30,36 @@
   --color-red-100: hsl(355, 100%, 95%);
   --color-red-600: hsl(345, 94%, 37%);
 
+  /* Pinks*/
+  --color-pink-100: hsl(339, 100%, 95%);
+  --color-pink-200: hsl(339, 50%, 75%);
+  --color-pink-500: hsl(339, 67%, 50%);
+
+  /*orange*/
+  --color-orange-100: hsl(34, 94%, 95%);
+  --color-orange-500: hsl(34, 74%, 50%);
+
+  /*purple*/
+  --color-purple-100: hsl(255, 100%, 94%);
+  --color-purple-500: hsl(249, 69%, 57%);
+
+  /*yellow*/
+  --color-yellow-100: hsl(60, 100%, 94%);
+  --color-yellow-500: hsl(58, 80%, 45%);
+
+  /*teal*/
+  --color-teal-100: hsl(184, 100%, 92%);
+  --color-teal-200: hsl(184, 50%, 60%);
+  --color-teal-500: hsl(178, 57%, 44%);
+
+
   /* SEMANTIC TOKENS */
   --bg-main: var(--color-gray-100);
   --bg-surface: var(--color-white);
   --bg-surface-component: var(--color-gray-25);
   --bg-surface-hover: var(--color-gray-25);
   --bg-surface-active-gray: var(--color-gray-200);
+  --bg-surface-dark: var(--color-gray-500);
 
   --bg-surface-active-green: var(--color-green-100);
 
@@ -71,6 +95,28 @@
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
+
+  /*dp icon colors and bg colors with 500 and 100 (no red)*/
+  --dp-bg-green: var(--color-green-100);
+  --dp-icon-green: var(--color-green-500);
+
+  --dp-bg-blue: var(--color-blue-100);
+  --dp-icon-blue: var(--color-blue-500);
+
+  --dp-bg-orange: var(--color-orange-100);
+  --dp-icon-orange: var(--color-orange-500);
+
+  --dp-bg-purple: var(--color-purple-100);
+  --dp-icon-purple: var(--color-purple-500);
+
+  --dp-bg-yellow: var(--color-yellow-100);
+  --dp-icon-yellow: var(--color-yellow-500);
+
+  --dp-bg-teal: var(--color-teal-100);
+  --dp-icon-teal: var(--color-teal-500);
+
+  --dp-bg-pink: var(--color-pink-100);
+  --dp-icon-pink: var(--color-pink-500);
 
   /* 12px 400 16px */
   --font-xs-regular: 400 0.75rem/1rem var(--sans);

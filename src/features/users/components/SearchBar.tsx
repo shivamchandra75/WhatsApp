@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './SearchBar.module.css';
 import { Search, X } from 'lucide-react';
 
-const SearchBar: React.FC = () => {
-  const [query, setQuery] = useState('');
+interface SearchBarProps {
+  query: string;
+  setQuery: (query: string) => void;
+}
 
+const SearchBar: React.FC<SearchBarProps> = ({ query, setQuery }) => {
   return (
     <div className={styles.searchContainer}>
       <div className={styles.searchWrapper}>
@@ -15,6 +18,12 @@ const SearchBar: React.FC = () => {
           onChange={(e) => setQuery(e.target.value)}
           className={styles.searchInput}
           placeholder="Search or start a new chat"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") {
+              setQuery("");
+              e.currentTarget.blur();
+            }
+          }}
         />
         {query && (
           <X

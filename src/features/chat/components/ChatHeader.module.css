@@ -12,11 +12,17 @@
   gap: 12px;
 }
 
+
 .avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: var(--color-gray-300);
+  object-fit: cover;
+  background-color: var(--bg-surface-active-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: .2px solid;
 }
 
 .details {
