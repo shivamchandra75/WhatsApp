@@ -49,3 +49,35 @@
 .clearIcon:hover {
   opacity: 0.7;
 }
+
+.resultsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.resultsTitle {
+  font: var(--font-sm-medium);
+  color: var(--text-secondary);
+  padding: 1.5rem 0rem 0.5rem 0.3rem;
+}
+
+.resultItemContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  gap: 1rem;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.resultItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  background-color: var(--bg-surface-component);
+  border-radius: 0.5rem;
+}

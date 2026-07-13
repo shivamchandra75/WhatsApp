@@ -1,11 +1,21 @@
 import React from 'react';
 import styles from './UserFilter.module.css';
 
-const UserFilter: React.FC = () => {
+interface UserFilterProps {
+  filter: string,
+  setFilter: (filter: string) => void
+}
+
+const UserFilter: React.FC<UserFilterProps> = ({ filter, setFilter }) => {
+  const handleClick = (filterType: string) => {
+    setFilter(filterType)
+  }
   return (
     <div className={styles.filterContainer}>
-      <button className={`${styles.filterBtn} ${styles.active}`}>All</button>
-      <button className={styles.filterBtn}>Unread</button>
+      <button
+        onClick={() => handleClick('all')}
+        className={`${styles.filterBtn} ${filter === 'all' && styles.active}`}>All</button>
+      <button onClick={() => handleClick('unread')} className={`${styles.filterBtn} ${filter === 'unread' && styles.active}`}>Unread</button>
     </div>
   );
 };
