@@ -1,0 +1,34 @@
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    /* background-color: var(--bg-surface-black); */
+}
+
+.videoContainer {
+    border-radius: 2rem;
+    background-color: var(--bg-surface-dark);
+    padding: 1rem;
+    flex: 1;
+}
+
+.controls {
+    position: fixed;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-surface-dark);
+    border-radius: 4rem;
+    padding: .5rem;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.controlButton {
+    border-radius: 4rem;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    border: none;
+}

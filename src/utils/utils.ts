@@ -15,3 +15,24 @@ export const getAvatarColor = (identifier: string) => {
     const index = Math.abs(hash) % AVATAR_COLORS.length;
     return AVATAR_COLORS[index];
 };
+
+export async function getCameraAndMicPermission() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true
+        });
+        return stream;
+    } catch (error) {
+        console.error('Error accessing media devices:', error);
+        throw error;
+    }
+}
+
+export function turnOffCameraAndMic(stream: MediaStream | null) {
+    if (stream) {
+        stream.getTracks().forEach(track => {
+            track.stop();
+        });
+    }
+}

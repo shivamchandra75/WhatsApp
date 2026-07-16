@@ -66,15 +66,16 @@ export const sendMessageToFirestore = async (chatId: string, text: string, sende
         console.error('Failed to update last message & unread count:', error);
     }
 };
+
 export const markChatAsReadInFirestore = async (chatId: string, currentUserId: string, isLastMessageFromOtherUser: boolean) => {
     try {
         const chatDocRef = doc(db, 'chats', chatId);
         const updates: Record<string, any> = { [`unreadCount.${currentUserId}`]: 0 };
-        
+
         if (isLastMessageFromOtherUser) {
             updates['lastMessage.isSeen'] = true;
         }
-        
+
         await updateDoc(chatDocRef, updates);
     } catch (error) {
         console.error('Failed to mark chat as read:', error);

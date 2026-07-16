@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { collection, query, orderBy, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../../../confg/firebase';
 import { setMessages } from '../chatSlice';
 import { type Message } from '../chat.types';
+import { useAppDispatch } from '../../../store/hooks';
 
 export const useChatMessages = (activeChatId: string | null) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (!activeChatId) return;

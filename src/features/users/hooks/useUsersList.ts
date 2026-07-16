@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../confg/firebase';
 import { setContacts } from '../usersSlice';
-import { useAppSelector } from '../../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import type { ContactProfile, LastMessage } from '../UserList.types';
 import { generateChatId } from '../../chat/services/chatService';
 
 export const useUsersList = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const currentUser = useAppSelector((state) => state.auth.user);
 
     useEffect(() => {

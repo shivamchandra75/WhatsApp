@@ -60,6 +60,7 @@
   --bg-surface-hover: var(--color-gray-25);
   --bg-surface-active-gray: var(--color-gray-200);
   --bg-surface-dark: var(--color-gray-500);
+  --bg-surface-black: var(--color-gray-900);
 
   --bg-surface-active-green: var(--color-green-100);
 

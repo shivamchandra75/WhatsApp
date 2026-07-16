@@ -4,6 +4,7 @@
   background-color: var(--bg-surface);
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .userInfo {
@@ -41,4 +42,16 @@
 .status {
   font-size: 0.75rem;
   color: var(--text-secondary);
+}
+
+.callButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 1rem;
+  padding: 0.35rem 1rem 0.2rem 1rem;
+}
+
+.callButton:hover {
+  background-color: var(--bg-surface-hover);
 }
