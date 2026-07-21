@@ -38,7 +38,7 @@ const VideoCall: React.FC = () => {
     }
   }, [localVideoEnabled, localAudioEnabled]);
 
-  if (status === 'idle' || !isFullScreen) {
+  if (status === 'idle') {
     return null;
   }
 
@@ -59,10 +59,16 @@ const VideoCall: React.FC = () => {
   };
 
   return (
-    <div className={styles.fullScreenContainer}>
-      <button className={styles.minimizeBtn} onClick={handleMinimize}>
-        <FaCompressAlt />
-      </button>
+    <div 
+      className={isFullScreen ? styles.fullScreenContainer : styles.pipContainer}
+      onClick={!isFullScreen ? () => dispatch(setFullScreen(true)) : undefined}
+      title={!isFullScreen ? "Click to return to full screen" : undefined}
+    >
+      {isFullScreen && (
+        <button className={styles.minimizeBtn} onClick={(e) => { e.stopPropagation(); handleMinimize(); }}>
+          <FaCompressAlt />
+        </button>
+      )}
 
       <div className={styles.remoteVideoContainer}>
         <video 
@@ -71,7 +77,7 @@ const VideoCall: React.FC = () => {
           playsInline 
           className={styles.remoteVideo} 
         />
-        {status === 'ringing' && (
+        {status === 'ringing' && isFullScreen && (
           <div className={styles.ringingOverlay}>
             <div className={styles.avatar}>
                {remoteUser?.displayName ? remoteUser.displayName[0].toUpperCase() : '?'}
@@ -81,33 +87,37 @@ const VideoCall: React.FC = () => {
         )}
       </div>
 
-      <div className={styles.localVideoContainer}>
-        <video 
-          ref={localVideoRef} 
-          autoPlay 
-          playsInline 
-          muted 
-          className={styles.localVideo} 
-        />
-      </div>
+      {isFullScreen && (
+        <div className={styles.localVideoContainer}>
+          <video 
+            ref={localVideoRef} 
+            autoPlay 
+            playsInline 
+            muted 
+            className={styles.localVideo} 
+          />
+        </div>
+      )}
 
-      <div className={styles.controlsBar}>
-        <button 
-          className={`${styles.controlBtn} ${!localAudioEnabled ? styles.disabledBtn : ''}`}
-          onClick={handleToggleAudio}
-        >
-          {localAudioEnabled ? <FaMicrophone /> : <FaMicrophoneSlash />}
-        </button>
-        <button 
-          className={`${styles.controlBtn} ${!localVideoEnabled ? styles.disabledBtn : ''}`}
-          onClick={handleToggleVideo}
-        >
-          {localVideoEnabled ? <FaVideo /> : <FaVideoSlash />}
-        </button>
-        <button className={`${styles.controlBtn} ${styles.endCallBtn}`} onClick={handleEndCall}>
-          <FaPhoneSlash />
-        </button>
-      </div>
+      {isFullScreen && (
+        <div className={styles.controlsBar}>
+          <button 
+            className={`${styles.controlBtn} ${!localAudioEnabled ? styles.disabledBtn : ''}`}
+            onClick={(e) => { e.stopPropagation(); handleToggleAudio(); }}
+          >
+            {localAudioEnabled ? <FaMicrophone /> : <FaMicrophoneSlash />}
+          </button>
+          <button 
+            className={`${styles.controlBtn} ${!localVideoEnabled ? styles.disabledBtn : ''}`}
+            onClick={(e) => { e.stopPropagation(); handleToggleVideo(); }}
+          >
+            {localVideoEnabled ? <FaVideo /> : <FaVideoSlash />}
+          </button>
+          <button className={`${styles.controlBtn} ${styles.endCallBtn}`} onClick={(e) => { e.stopPropagation(); handleEndCall(); }}>
+            <FaPhoneSlash />
+          </button>
+        </div>
+      )}
     </div>
   );
 };
