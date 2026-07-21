@@ -24,7 +24,7 @@ export const useUsersList = () => {
             const enrichedContacts = contacts.map(contact => ({
                 ...contact,
                 lastMessage: lastMessageMap.get(contact.uid),
-                unreadCount: unreadCountMap.get(contact.uid),
+                unreadCount: unreadCountMap.get(contact.uid) ?? 0,
             }));
             dispatch(setContacts(enrichedContacts));
         };
