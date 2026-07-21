@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import  { useEffect } from 'react';
 import MainLayout from './components/layout/MainLayout';
 import styles from './components/layout/MainLayout.module.css';
-import { UserList } from './features/users/UserList';
 import { useAppSelector } from './store/hooks';
 import { useAuthListener } from './features/auth/hooks/useAuthListener';
 import LoginPage from './features/auth/components/LoginPage';

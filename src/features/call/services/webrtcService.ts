@@ -1,11 +1,10 @@
-import { collection, doc, setDoc, getDoc, onSnapshot, updateDoc, addDoc, query, where, deleteDoc } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, onSnapshot, updateDoc, addDoc, query, where } from 'firebase/firestore';
 import { db } from '../../../confg/firebase';
 import store from '../../../store/store';
-import { 
-  setCallStatus, 
-  setIncomingCall, 
-  setCallConnected, 
-  endCall, 
+import {
+  setIncomingCall,
+  setCallConnected,
+  endCall,
   setLocalStreamActive,
   setRemoteStreamActive
 } from '../callSlice';
@@ -93,7 +92,7 @@ class WebRTCService {
     };
 
     await setDoc(callDoc, callData);
-    
+
     // Listen for remote ICE candidates
     const pendingCandidates: RTCIceCandidateInit[] = [];
     this.unsubscribeAnswerCandidates = onSnapshot(answerCandidates, (snapshot) => {
@@ -165,7 +164,7 @@ class WebRTCService {
 
     const offerDescription = callData.offer;
     await this.pc!.setRemoteDescription(new RTCSessionDescription(offerDescription));
-    
+
     // Add any pending candidates now that remote description is set
     pendingCandidates.forEach(candidate => {
       this.pc?.addIceCandidate(new RTCIceCandidate(candidate));
@@ -202,7 +201,7 @@ class WebRTCService {
     if (this.callDocRef) {
       try {
         await updateDoc(this.callDocRef, { status: 'ended' });
-      } catch(e) {
+      } catch (e) {
         console.warn('Call doc might already be deleted or permission denied', e);
       }
     }
@@ -219,7 +218,7 @@ class WebRTCService {
       this.localStream = null;
     }
     this.remoteStream = null;
-    
+
     if (this.unsubscribeCall) this.unsubscribeCall();
     if (this.unsubscribeOfferCandidates) this.unsubscribeOfferCandidates();
     if (this.unsubscribeAnswerCandidates) this.unsubscribeAnswerCandidates();

@@ -90,7 +90,7 @@ export const registerUser = createAsyncThunk(
             const docData = {
                 uid: user.uid,
                 email: user.email,
-                displayName: displayName || getName(user.email),
+                displayName: displayName || getName(user.email || 'unknown user'),
                 createdAt: new Date().toISOString(),
                 status: "Hey there! I am using WhatsApp.",
                 isOnline: true,
@@ -103,7 +103,7 @@ export const registerUser = createAsyncThunk(
         return {
             uid: user.uid,
             email: user.email,
-            displayName: displayName || getName(user.email),
+            displayName: displayName || getName(user.email || 'unkown user'),
         };
     }
 );
