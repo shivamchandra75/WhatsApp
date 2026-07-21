@@ -14,9 +14,9 @@ const ChatHeader: React.FC = () => {
   const activeContactData = useAppSelector(state =>
     state.users.contacts.find(c => c.uid === state.chat.activeContact?.uid)
   );
-  
+
   const currentUser = useAppSelector(state => state.auth.user);
-  const { status, callId, isFullScreen } = useSelector((state: RootState) => state.call);
+  const { status } = useSelector((state: RootState) => state.call);
 
   const colorTheme = activeContactData ? getAvatarColor(activeContactData.uid) : 'green';
   const bgColor = `var(--dp-bg-${colorTheme})`;
@@ -35,7 +35,7 @@ const ChatHeader: React.FC = () => {
     const stream = await webRTCService.initLocalStream();
     if (stream) {
       dispatch(initiateCall(activeContactData));
-      
+
       const callerProfile = {
         uid: currentUser.uid,
         email: currentUser.email || '',
@@ -62,11 +62,11 @@ const ChatHeader: React.FC = () => {
           <span className={styles.status}>{activeContactData?.isOnline ? 'online' : 'offline'}</span>
         </div>
       </div>
-      
+
       {activeContactData && (
         <div className={styles.actions}>
-          <button 
-            className={`${styles.callButton} ${status !== 'idle' ? styles.activeCall : ''}`} 
+          <button
+            className={`${styles.callButton} ${status !== 'idle' ? styles.activeCall : ''}`}
             onClick={handleVideoCallClick}
             title={status !== 'idle' ? "Return to Call" : "Video Call"}
           >

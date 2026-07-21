@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
+import { createSlice,  type PayloadAction } from '@reduxjs/toolkit';
 import type { ContactProfile, UsersState } from './UserList.types';
 
 const initialState: UsersState = {

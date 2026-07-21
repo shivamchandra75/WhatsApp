@@ -51,7 +51,7 @@ const callSlice = createSlice({
       state.callId = action.payload;
       state.isFullScreen = true;
     },
-    endCall: (state) => {
+    endCall: () => {
       return initialState; // Reset state
     },
     setFullScreen: (state, action: PayloadAction<boolean>) => {

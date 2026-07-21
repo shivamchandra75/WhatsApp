@@ -1,12 +1,10 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector  } from 'react-redux';
 import type { RootState } from '../../../store/store';
 import { webRTCService } from '../services/webrtcService';
 import styles from './IncomingCallModal.module.css';
-import { setCallConnected } from '../callSlice';
 
 const IncomingCallModal: React.FC = () => {
-  const dispatch = useDispatch();
   const { status, callId, remoteUser, isCaller } = useSelector((state: RootState) => state.call);
 
   if (status !== 'ringing' || !callId || !remoteUser) {
