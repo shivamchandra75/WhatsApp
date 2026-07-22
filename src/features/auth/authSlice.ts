@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
 import { auth, db } from '../../confg/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { updateUserOnlineStatusInFirestore } from './Services/authService';
@@ -81,6 +81,10 @@ export const registerUser = createAsyncThunk(
         let credentials;
         try {
             credentials = await createUserWithEmailAndPassword(auth, email, password);
+
+            await updateProfile(credentials.user, {
+                displayName: displayName || getName(email || 'unknown user')
+            });
         } catch (authErr: any) {
             return rejectWithValue(getFirebaseAuthError(authErr.code));
         }
