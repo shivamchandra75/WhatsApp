@@ -1,6 +1,6 @@
 import React from 'react';
 import { type ContactProfile } from './UserList.types';
-import styles from './UserList.module.css';
+import styles from './userList.module.css';
 import { useUsersList } from './hooks/useUsersList';
 import { useAppSelector } from '../../store/hooks';
 import { ContactCard } from './components/ContactCard';
