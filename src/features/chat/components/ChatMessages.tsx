@@ -8,7 +8,7 @@ import { CheckCheck } from 'lucide-react';
 const ChatMessages: React.FC = () => {
   const { activeChatId, activeMessages } = useAppSelector(state => state.chat);
   const { user: currentUser } = useAppSelector(state => state.auth);
-  const messageEndRef = useRef(null);
+  const messageEndRef = useRef<HTMLDivElement>(null);
 
   useChatMessages(activeChatId);
 
