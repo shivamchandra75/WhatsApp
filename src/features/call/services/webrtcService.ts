@@ -15,7 +15,6 @@ const servers = {
     {
       urls: ['stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'],
     },
-    // The TURN server provides a fallback for users on different networks (Symmetric NATs)
     {
       urls: (import.meta.env.VITE_TURN_SERVER_URL || '').split(','),
       username: import.meta.env.VITE_TURN_SERVER_USER || '',

@@ -14,7 +14,6 @@ export const useChatMessages = (activeChatId: string | null) => {
         const currentUserId = auth.currentUser?.uid;
         if (!currentUserId) return;
 
-        console.log(`Opening live stream for chat room: ${activeChatId}`);
 
         const messagesSubCollectionRef = collection(db, 'chats', activeChatId, 'messages');
         const q = query(messagesSubCollectionRef, orderBy('timestamp', 'asc'));
@@ -62,7 +61,6 @@ export const useChatMessages = (activeChatId: string | null) => {
         );
 
         return () => {
-            console.log(`Closing live stream for chat room: ${activeChatId}`);
             unsubscribe();
         };
 

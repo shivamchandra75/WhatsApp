@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from './ChatMessages.module.css';
 import { useAppSelector } from '../../../store/hooks';
 import { useChatMessages } from '../hooks/useChatMessages';
@@ -8,9 +8,14 @@ import { CheckCheck } from 'lucide-react';
 const ChatMessages: React.FC = () => {
   const { activeChatId, activeMessages } = useAppSelector(state => state.chat);
   const { user: currentUser } = useAppSelector(state => state.auth);
-
+  const messageEndRef = useRef(null);
 
   useChatMessages(activeChatId);
+
+  useEffect(() => {
+    if (!messageEndRef?.current) return;
+    messageEndRef.current.scrollIntoView({ behavior: "smooth" })
+  }, [activeMessages])
 
   return (
     <div className={styles.messagesContainer}>
@@ -36,6 +41,7 @@ const ChatMessages: React.FC = () => {
               </span>
             </div>
           ))}
+          <div ref={messageEndRef}></div>
         </div>
       )}
     </div>
