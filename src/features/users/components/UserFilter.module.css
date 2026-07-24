@@ -7,19 +7,24 @@
 .filterBtn {
   padding: 6px 12px;
   border-radius: 16px;
-  border: none;
-  background-color: var(--bg-surface-component);
+  border: 1px solid var(--color-gray-500);
+  background-color: transparent;
   color: var(--text-secondary);
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.filterBtn.active {
-  background-color: var(--bg-surface-active-green);
-  color: var(--text-active-dark);
+.filterBtn:hover {
+  background-color: var(--color-gray-25);
 }
 
-.filterBtn:hover {
-  background-color: var(--bg-surface-hover);
+.filterBtn.active {
+  background-color: var(--color-green-100);
+  border-color: var(--color-green-700);
+  color: var(--color-green-700);
+}
+
+.filterBtn.active:hover {
+  filter: brightness(0.95);
 }
