@@ -1,4 +1,4 @@
-import  { useEffect } from 'react';
+import { useEffect } from 'react';
 import MainLayout from './components/layout/MainLayout';
 import styles from './components/layout/MainLayout.module.css';
 import { useAppSelector } from './store/hooks';
@@ -24,22 +24,7 @@ export default function App() {
 
   useEffect(() => {
     if (user) {
-      // Listen for incoming calls
       webRTCService.listenForIncomingCalls(user.uid);
-
-      // Request media permissions on login
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-          .then(stream => {
-            // Stop tracks immediately since we just wanted permission
-            stream.getTracks().forEach(track => track.stop());
-          })
-          .catch(err => {
-            console.warn('User denied media permissions on login:', err);
-          });
-      } else {
-        console.warn('Media devices not supported or running in an insecure context (HTTP instead of HTTPS).');
-      }
 
       return () => {
         webRTCService.stopListeningForIncomingCalls();

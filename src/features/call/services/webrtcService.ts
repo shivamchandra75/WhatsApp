@@ -197,12 +197,18 @@ class WebRTCService {
   }
 
   async rejectCall(callId: string) {
-    const callDoc = doc(db, 'calls', callId);
-    await updateDoc(callDoc, { status: 'ended' });
     store.dispatch(endCall());
+    const callDoc = doc(db, 'calls', callId);
+    try {
+      await updateDoc(callDoc, { status: 'ended' });
+    } catch (e) {
+      console.warn('Error rejecting call', e);
+    }
   }
 
   async hangUp() {
+    this.cleanupCall();
+    
     if (this.callDocRef) {
       try {
         await updateDoc(this.callDocRef, { status: 'ended' });
@@ -210,7 +216,6 @@ class WebRTCService {
         console.warn('Call doc might already be deleted or permission denied', e);
       }
     }
-    this.cleanupCall();
   }
 
   private cleanupCall() {

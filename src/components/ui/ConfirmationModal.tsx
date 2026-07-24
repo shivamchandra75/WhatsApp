@@ -10,6 +10,7 @@ interface ConfirmationModalProps {
   confirmText?: string;
   cancelText?: string;
   isLoading?: boolean;
+  hideCancel?: boolean;
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
@@ -21,6 +22,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   confirmText = 'Confirm',
   cancelText = 'Cancel',
   isLoading = false,
+  hideCancel = false,
 }) => {
   if (!isOpen) return null;
 
@@ -30,13 +32,15 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         <h3 className={styles.title}>{title}</h3>
         <p className={styles.message}>{message}</p>
         <div className={styles.buttonGroup}>
-          <button 
-            className={styles.cancelBtn} 
-            onClick={onCancel}
-            disabled={isLoading}
-          >
-            {cancelText}
-          </button>
+          {!hideCancel && (
+            <button 
+              className={styles.cancelBtn} 
+              onClick={onCancel}
+              disabled={isLoading}
+            >
+              {cancelText}
+            </button>
+          )}
           <button 
             className={styles.confirmBtn} 
             onClick={onConfirm}
