@@ -25,5 +25,6 @@ export interface Message {
     id: string;
     text: string;
     senderId: string;
+    isSeen: boolean;
     timestamp: number | null; // stored as milliseconds — plain number, Redux serializable
 }

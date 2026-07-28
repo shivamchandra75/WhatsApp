@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './ChatHeader.module.css';
 import { useAppSelector } from '../../../store/hooks';
 import { User2 } from 'lucide-react';
@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { webRTCService } from '../../call/services/webrtcService';
 import { initiateCall, setFullScreen } from '../../call/callSlice';
 import type { RootState } from '../../../store/store';
+import ConfirmationModal from '../../../components/ui/ConfirmationModal';
 
 const ChatHeader: React.FC = () => {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ const ChatHeader: React.FC = () => {
 
   const currentUser = useAppSelector(state => state.auth.user);
   const { status } = useSelector((state: RootState) => state.call);
+  const [showPermissionModal, setShowPermissionModal] = useState(false);
 
   const colorTheme = activeContactData ? getAvatarColor(activeContactData.uid) : 'green';
   const bgColor = `var(--dp-bg-${colorTheme})`;
@@ -26,7 +28,6 @@ const ChatHeader: React.FC = () => {
     if (!activeContactData || !currentUser) return;
 
     if (status !== 'idle') {
-      // If a call is already active, just return to full screen
       dispatch(setFullScreen(true));
       return;
     }
@@ -47,34 +48,46 @@ const ChatHeader: React.FC = () => {
 
       await webRTCService.createCall(callerProfile, activeContactData);
     } else {
-      alert("Microphone or camera permission denied.");
+      setShowPermissionModal(true);
     }
   };
 
   return (
-    <div className={styles.header}>
-      <div className={styles.userInfo}>
-        <div className={styles.avatar} style={{ backgroundColor: bgColor, borderColor: iconColor }}>
-          <User2 color={iconColor} size={24} />
+    <>
+      <div className={styles.header}>
+        <div className={styles.userInfo}>
+          <div className={styles.avatar} style={{ backgroundColor: bgColor, borderColor: iconColor }}>
+            <User2 color={iconColor} size={24} />
+          </div>
+          <div className={styles.details}>
+            <h3 className={styles.name}>{activeContactData?.displayName}</h3>
+            <span className={styles.status}>{activeContactData?.isOnline ? 'online' : 'offline'}</span>
+          </div>
         </div>
-        <div className={styles.details}>
-          <h3 className={styles.name}>{activeContactData?.displayName}</h3>
-          <span className={styles.status}>{activeContactData?.isOnline ? 'online' : 'offline'}</span>
-        </div>
+
+        {activeContactData && (
+          <div className={styles.actions}>
+            <button
+              className={`${styles.callButton} ${status !== 'idle' ? styles.activeCall : ''}`}
+              onClick={handleVideoCallClick}
+              title={status !== 'idle' ? "Return to Call" : "Video Call"}
+            >
+              <FaVideo />
+            </button>
+          </div>
+        )}
       </div>
 
-      {activeContactData && (
-        <div className={styles.actions}>
-          <button
-            className={`${styles.callButton} ${status !== 'idle' ? styles.activeCall : ''}`}
-            onClick={handleVideoCallClick}
-            title={status !== 'idle' ? "Return to Call" : "Video Call"}
-          >
-            <FaVideo />
-          </button>
-        </div>
-      )}
-    </div>
+      <ConfirmationModal
+        isOpen={showPermissionModal}
+        title="Permission Denied"
+        message="We need access to your camera and microphone to make a video call. Please click the lock icon 🔒 next to the website URL in your browser, turn on the permissions, and try again."
+        confirmText="Understood"
+        onConfirm={() => setShowPermissionModal(false)}
+        onCancel={() => setShowPermissionModal(false)}
+        hideCancel={true}
+      />
+    </>
   );
 };
 
