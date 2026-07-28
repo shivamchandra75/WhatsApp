@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, increment, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, increment, query, serverTimestamp, setDoc, updateDoc, where, writeBatch } from "firebase/firestore";
 import { db } from "../../../confg/firebase";
 
 
@@ -67,17 +67,44 @@ export const sendMessageToFirestore = async (chatId: string, text: string, sende
     }
 };
 
-export const markChatAsReadInFirestore = async (chatId: string, currentUserId: string, isLastMessageFromOtherUser: boolean) => {
-    try {
-        const chatDocRef = doc(db, 'chats', chatId);
-        const updates: Record<string, any> = { [`unreadCount.${currentUserId}`]: 0 };
+export const markConversationAsRead = async (chatId: string, currentUserId: string) => {
+  const contactId = chatId.split('_').find(id => id !== currentUserId);
+  if (!contactId) return;
 
-        if (isLastMessageFromOtherUser) {
-            updates['lastMessage.isSeen'] = true;
-        }
+  try {
+    const chatDocRef = doc(db, 'chats', chatId);
+    const chatSnapshot = await getDoc(chatDocRef);
 
-        await updateDoc(chatDocRef, updates);
-    } catch (error) {
-        console.error('Failed to mark chat as read:', error);
+    const updates: Record<string, any> = {
+      [`unreadCount.${currentUserId}`]: 0
+    };
+
+    if (chatSnapshot.exists()) {
+      const chatData = chatSnapshot.data();
+      if (chatData?.lastMessage?.senderId !== currentUserId) {
+        updates['lastMessage.isSeen'] = true;
+      }
     }
+
+    await updateDoc(chatDocRef, updates);
+
+    const messagesSubCollectionRef = collection(db, 'chats', chatId, 'messages');
+    const q = query(
+      messagesSubCollectionRef,
+      where('isSeen', '==', false),
+      where('senderId', '==', contactId)
+    );
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) return;
+
+    const batch = writeBatch(db);
+    querySnapshot.docs.forEach((docSnap) => {
+      batch.update(docSnap.ref, { isSeen: true });
+    });
+
+    await batch.commit();
+  } catch (error) {
+    console.error('Failed to mark conversation as read:', error);
+  }
 };

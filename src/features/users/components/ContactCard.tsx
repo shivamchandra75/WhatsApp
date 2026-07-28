@@ -3,7 +3,7 @@ import type { ContactProfile } from '../UserList.types';
 import styles from '../userList.module.css';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setActiveChatId, setActiveContact } from '../../chat/chatSlice';
-import { startOrJoinChat, markChatAsReadInFirestore } from '../../chat/services/chatService';
+import { startOrJoinChat, markConversationAsRead } from '../../chat/services/chatService';
 import { formatTimeTo12Hours, getAvatarColor } from '../../../utils/utils';
 import { CheckCheck, User2 } from 'lucide-react';
 
@@ -23,8 +23,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({ user }) => {
     dispatch(setActiveChatId(chatId));
     dispatch(setActiveContact(user));
 
-    const isOtherUser = user.lastMessage?.senderId !== currentUserUid;
-    await markChatAsReadInFirestore(chatId, currentUserUid, isOtherUser);
+    await markConversationAsRead(chatId, currentUserUid);
   };
 
   const getIconColor = () => {

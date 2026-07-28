@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { collection, query, orderBy, onSnapshot, doc, updateDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { auth, db } from '../../../confg/firebase';
 import { setMessages } from '../chatSlice';
 import { type Message } from '../chat.types';
+import { markConversationAsRead } from '../services/chatService';
 
 export const useChatMessages = (activeChatId: string | null) => {
     const dispatch = useDispatch();
@@ -14,30 +15,25 @@ export const useChatMessages = (activeChatId: string | null) => {
         const currentUserId = auth.currentUser?.uid;
         if (!currentUserId) return;
 
-
         const messagesSubCollectionRef = collection(db, 'chats', activeChatId, 'messages');
         const q = query(messagesSubCollectionRef, orderBy('timestamp', 'asc'));
 
         const unsubscribe = onSnapshot(
             q,
             (snapshot) => {
-                let hasNewMessagesFromOtherUser = false;
+                let hasUnreadFromOtherUser = false;
 
-                const messagesData: Message[] = snapshot.docs.map((doc) => {
-                    const data = doc.data();
+                const messagesData: Message[] = snapshot.docs.map((docSnap) => {
+                    const data = docSnap.data();
 
-                    // Check if there are new unread messages from the other user
-                    if (snapshot.docChanges().some(change =>
-                        change.type === 'added' &&
-                        change.doc.data().senderId !== currentUserId
-                    )) {
-                        hasNewMessagesFromOtherUser = true;
+                    if (data.senderId !== currentUserId && !data.isSeen) {
+                        hasUnreadFromOtherUser = true;
                     }
 
                     return {
-                        id: doc.id,
+                        id: docSnap.id,
                         text: data.text || '',
-                        isSeen: data.isSeen,
+                        isSeen: Boolean(data.isSeen),
                         senderId: data.senderId || '',
                         timestamp: data.timestamp?.toMillis() ?? null,
                     };
@@ -45,14 +41,9 @@ export const useChatMessages = (activeChatId: string | null) => {
 
                 dispatch(setMessages(messagesData));
 
-                // If a new message arrived while the user is actively viewing the chat,
-                // instantly clear their unread count.
-                if (hasNewMessagesFromOtherUser) {
-                    const chatDocRef = doc(db, 'chats', activeChatId);
-                    updateDoc(chatDocRef, {
-                        [`unreadCount.${currentUserId}`]: 0,
-                        'lastMessage.isSeen': true
-                    }).catch(err => console.error("Failed to clear unread count:", err));
+                // If user is actively viewing this chat room and unread messages from contact exist, mark conversation as read
+                if (hasUnreadFromOtherUser) {
+                    markConversationAsRead(activeChatId, currentUserId);
                 }
             },
             (error) => {
