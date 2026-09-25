@@ -73,6 +73,8 @@ export const markConversationAsRead = async (chatId: string, currentUserId: stri
 
   try {
     const chatDocRef = doc(db, 'chats', chatId);
+    const chatDocSnap = await getDoc(chatDocRef);
+    const chatData = chatDocSnap.data();
     const messagesSubCollectionRef = collection(db, 'chats', chatId, 'messages');
 
     // Query unread messages sent by the contact
@@ -81,18 +83,23 @@ export const markConversationAsRead = async (chatId: string, currentUserId: stri
       where('isSeen', '==', false),
       where('senderId', '==', contactId)
     );
-    const querySnapshot = await getDocs(q);
+    const unreadChatMessagesSnapshot = await getDocs(q);
 
     // Create a single atomic write batch for root document and sub-collection messages
     const batch = writeBatch(db);
 
-    batch.update(chatDocRef, {
+    const updateData :{ [key: string]: any } = {
       [`unreadCount.${currentUserId}`]: 0,
-      'lastMessage.isSeen': true
-    });
+    }
 
-    if (!querySnapshot.empty) {
-      querySnapshot.docs.forEach((docSnap) => {
+    if(chatData?.lastMessage?.senderId === contactId){
+      updateData[`lastMessage.isSeen`] = true;
+    }
+
+    batch.update(chatDocRef, updateData);
+
+    if (!unreadChatMessagesSnapshot.empty) {
+      unreadChatMessagesSnapshot.docs.forEach((docSnap) => {
         batch.update(docSnap.ref, { isSeen: true });
       });
     }
