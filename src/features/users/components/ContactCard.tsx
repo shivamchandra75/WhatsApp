@@ -8,32 +8,32 @@ import { formatTimeTo12Hours, getAvatarColor } from '../../../utils/utils';
 import { CheckCheck, User2 } from 'lucide-react';
 
 interface ContactCardProps {
-  user: ContactProfile;
+  contact: ContactProfile;
 }
 
-export const ContactCard: React.FC<ContactCardProps> = ({ user }) => {
+export const ContactCard: React.FC<ContactCardProps> = ({ contact }) => {
   const dispatch = useAppDispatch();
   const currentUserUid = useAppSelector((state) => state.auth.user?.uid);
 
   const handleClick = async () => {
     if (!currentUserUid) return;
 
-    const chatId = await startOrJoinChat(currentUserUid, user.uid);
+    const chatId = await startOrJoinChat(currentUserUid, contact.uid);
 
     dispatch(setActiveChatId(chatId));
-    dispatch(setActiveContact(user));
+    dispatch(setActiveContact(contact));
 
     await markConversationAsRead(chatId, currentUserUid);
   };
 
   const getIconColor = () => {
-    if (user.lastMessage?.isSeen) {
+    if (contact.lastMessage?.isSeen) {
       return "var(--info)";
     }
     return "var(--text-secondary)";
   }
 
-  const colorTheme = getAvatarColor(user.uid);
+  const colorTheme = getAvatarColor(contact.uid);
   const bgColor = `var(--dp-bg-${colorTheme})`;
   const iconColor = `var(--dp-icon-${colorTheme})`;
 
@@ -44,24 +44,24 @@ export const ContactCard: React.FC<ContactCardProps> = ({ user }) => {
       </div>
       <div className={styles.userInfo}>
         <div className={styles.headerRow}>
-          <h4 className={styles.username}>{user.displayName}</h4>
-          {user.lastMessage && (
-            <span className={user.unreadCount > 0 ? styles.timestampUnread : styles.timestamp}>
-              {formatTimeTo12Hours(user.lastMessage.timestamp)}
+          <h4 className={styles.username}>{contact.displayName}</h4>
+          {contact.lastMessage && (
+            <span className={contact.unreadCount > 0 ? styles.timestampUnread : styles.timestamp}>
+              {formatTimeTo12Hours(contact.lastMessage.timestamp)}
             </span>
           )}
         </div>
-        {user.lastMessage && (
+        {contact.lastMessage && (
           <div className={styles.messageRow}>
             <p className={styles.messageText}>
-              {user.lastMessage.senderId === currentUserUid && (
+              {contact.lastMessage.senderId === currentUserUid && (
                 <CheckCheck size={16} color={getIconColor()} style={{ marginRight: 4, verticalAlign: 'middle' }} />
               )}
-              {user.lastMessage?.text}
+              {contact.lastMessage?.text}
             </p>
-            {user.unreadCount > 0 && (
+            {contact.unreadCount > 0 && (
               <span className={styles.unreadDot}>
-                {user.unreadCount > 99 ? '99+' : user.unreadCount}
+                {contact.unreadCount > 99 ? '99+' : contact.unreadCount}
               </span>
             )}
           </div>

@@ -28,7 +28,7 @@ export const UserList: React.FC<UserListProps> = ({ query = '', filter = 'all', 
   return (
     <div className={styles.userList}>
       {filteredContacts.map((user: ContactProfile) => (
-        <ContactCard key={user.uid} user={user} />
+        <ContactCard key={user.uid} contact={user} />
       ))}
       {filteredContacts.length === 0 && <>
         <div className={styles.noContacts}>No contacts found</div>
